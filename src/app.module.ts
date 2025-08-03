@@ -18,7 +18,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         password: configService.get<string>('DB_PASSWORD', ''),
         database: configService.get<string>('DB_NAME', 'nestjs_concepts_development'),
         autoLoadEntities: true,
-        synchronize: true, // Automatically syncs the database schema with entities on every app launch (⚠️ Not recommended for production). Will disable later.
+        synchronize: false, // Disabled for production - use migrations instead
+        migrations: ['dist/database/migrations/*.js'],
+        migrationsRun: true, // Automatically run migrations on app startup
         logging: true,
       }),
       inject: [ConfigService],
