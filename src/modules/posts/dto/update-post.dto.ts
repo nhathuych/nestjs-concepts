@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Max, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class UpdatePostDto {
   @IsOptional()
@@ -13,11 +13,4 @@ export class UpdatePostDto {
   @IsString()
   @MinLength(5)
   content?: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
-  author?: string;
 }

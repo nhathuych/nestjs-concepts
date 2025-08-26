@@ -37,7 +37,6 @@ export class PostsService {
     if (!post) throw new NotFoundException(`Post with ID ${id} not found`);
 
     post.title = updatePostDto.title ?? post.title;
-    post.author = updatePostDto.author ?? post.author;
     post.content = updatePostDto.content ?? post.content;
 
     return this.postRepository.save(post);

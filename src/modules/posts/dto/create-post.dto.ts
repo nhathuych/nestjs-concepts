@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, Max, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -16,9 +16,6 @@ export class CreatePostDto {
   content: string;
 
   @IsNotEmpty()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(50)
-  @Transform(({ value }) => value.trim())
-  author: string;
+  @IsNumber()
+  userId: number;
 }
