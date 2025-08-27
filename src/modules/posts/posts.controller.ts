@@ -3,7 +3,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
-@Controller('posts')
+@Controller({ path: 'posts', version: '1' }) // /api/v1/posts
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
