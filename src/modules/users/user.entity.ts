@@ -11,7 +11,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
   
-  @Column()
+  @Column({ name: 'full_name' })
   fullName: string;
 
   @Column({ unique: true })
@@ -26,9 +26,9 @@ export class User {
   @OneToMany(() => Post, post => post.userId)
   posts: Post[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
