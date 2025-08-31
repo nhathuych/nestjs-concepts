@@ -4,6 +4,7 @@ import { Post } from './post.entity';
 import { ILike, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { User, UserRole } from '../users/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -14,14 +15,15 @@ export class PostsService {
     return this.postRepository.find({
       where: whereClause,
       order: { id: 'DESC' },
+      relations: ['user'],
     });
   }
 
   findOne(id: number): Promise<Post | null> {
-    return this.postRepository.findOneBy({ id });
+    return this.postRepository.findOne({ where: { id }, relations: ['user'] });
   }
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(createPostDto: CreatePostDto, user: User): Promise<Post> {
     // Use create() before save() to ensure hooks like @BeforeInsert run
     // Avoid doing: this.postRepository.save(createPostDto);
 
@@ -29,12 +31,14 @@ export class PostsService {
     if (existingPost) throw new BadRequestException(`Post with title "${createPostDto.title}" already exists`);
 
     const post = this.postRepository.create(createPostDto); // convert DTO to a Post entity instance (not saved yet)
+    post.userId = user.id;
     return this.postRepository.save(post);  // insert the entity into the database
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
+  async update(id: number, updatePostDto: UpdatePostDto, user: User): Promise<Post> {
     const post = await this.findOne(id);
     if (!post) throw new NotFoundException(`Post with ID ${id} not found`);
+    if (post.user.id !== user.id && user.role !== UserRole.ADMIN) throw new BadRequestException(`You can only update your own posts`);
 
     post.title = updatePostDto.title ?? post.title;
     post.content = updatePostDto.content ?? post.content;

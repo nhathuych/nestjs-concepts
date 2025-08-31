@@ -14,8 +14,4 @@ export class CreatePostDto {
   @MinLength(5)
   @Transform(({ value }) => value.trim())
   content: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  userId: number;
 }
