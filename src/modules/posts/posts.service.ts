@@ -8,7 +8,10 @@ import { User, UserRole } from '../users/user.entity';
 
 @Injectable()
 export class PostsService {
-  constructor(@InjectRepository(Post) private postRepository: Repository<Post>) {}
+  constructor(
+    @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
   findAll(search?: string): Promise<Post[]> {
     const whereClause = search ? { title: ILike(`%${search}%`) } : {};
@@ -30,8 +33,11 @@ export class PostsService {
     const existingPost = await this.postRepository.findOneBy({ title: createPostDto.title });
     if (existingPost) throw new BadRequestException(`Post with title "${createPostDto.title}" already exists`);
 
+    const foundUser = await this.userRepository.findOneBy({ id: user.id });
+    if (!foundUser) throw new NotFoundException(`User with ID ${user.id} not found`);
+
     const post = this.postRepository.create(createPostDto); // convert DTO to a Post entity instance (not saved yet)
-    post.userId = user.id;
+    post.user = foundUser;
     return this.postRepository.save(post);  // insert the entity into the database
   }
 

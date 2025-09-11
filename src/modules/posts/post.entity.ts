@@ -12,16 +12,13 @@ export class Post {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ name: 'user_id' })
-  userId: number;
-
-  @ManyToOne(() => User, user => user.posts, { createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => User, user => user.posts)
+  @JoinColumn()
   user: User;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

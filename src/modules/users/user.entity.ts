@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Post } from '../posts/post.entity';
+import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   USER  = 'user',
@@ -10,25 +11,28 @@ export enum UserRole {
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
-  
-  @Column({ name: 'full_name' })
+
+  @Column()
   fullName: string;
 
   @Column({ unique: true })
   email: string;
 
+  @Exclude()  // Exclude this field from any serialized response (never sent to the client)
   @Column()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
-  @OneToMany(() => Post, post => post.userId)
+  @OneToMany(() => Post, post => post.user)
   posts: Post[];
 
-  @CreateDateColumn({ name: 'created_at' })
+  @Exclude()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @Exclude()
+  @UpdateDateColumn()
   updatedAt: Date;
 }
