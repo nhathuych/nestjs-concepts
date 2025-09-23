@@ -2,13 +2,9 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ClassSerializerInterceptor, Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
-  const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'warn', 'debug', 'error', 'verbose'],
-  });
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3001);
 
@@ -27,10 +23,8 @@ async function bootstrap() {
     defaultVersion: '1',      // if version is not specified, default to v1
   });
 
-  // Enable automatic serialization rules (e.g., @Exclude()) for all responses
   app.useGlobalInterceptors(
-    new LoggingInterceptor(),
-    new ClassSerializerInterceptor(app.get(Reflector)),
+    new ClassSerializerInterceptor(app.get(Reflector)), // Enable automatic serialization rules (e.g., @Exclude()) for all responses
   );
 
   await app.listen(port);
