@@ -4,6 +4,10 @@
 $ npm install
 ```
 
+```bash
+$ cp .env.example .env
+```
+
 ## Compile and run the project
 
 ```bash
@@ -49,4 +53,9 @@ $ npm run migration:revert
 
 # Show all migrations and their execution status (executed vs pending)
 $ npm run migration:show
+```
+
+Seed Data
+```bash
+$ npm run seed
 ```
